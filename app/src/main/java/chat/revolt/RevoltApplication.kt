@@ -1,6 +1,7 @@
 package chat.revolt
 
 import android.app.Application
+import android.os.StrictMode
 import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import logcat.AndroidLogcatLogger
@@ -15,6 +16,16 @@ class RevoltApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = LogPriority.VERBOSE)
+
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy
+                .Builder()
+                .apply {
+                    detectAll()
+                    penaltyLog()
+                }
+                .build()
+        )
     }
 
     init {
