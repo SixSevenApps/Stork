@@ -2,7 +2,11 @@
 
 ## Description
 
-Official [Revolt](https://revolt.chat) Android app
+Official [Revolt](https://revolt.chat) Android app.
+
+![Get it on Google Play](https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png)
+
+Google Play is a trademark of Google LLC.
 
 The codebase includes the app itself, as well as an internal library for interacting with the Revolt
 API. The app is written in Kotlin, and wholly
