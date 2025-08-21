@@ -48,7 +48,7 @@ try {
 
 // Create the output folder
 Deno.mkdirSync(outputFolder, { recursive: true })
-/*
+
 const deps = [
     {
         file: "katex.min.css",
@@ -331,7 +331,7 @@ for (const dep of deps) {
     const file = resolve(outputFolder, dep.file)
     Deno.writeFileSync(file, new Uint8Array(data))
     console.log(`Downloaded ${dep.file} to ${file}`)
-}*/
+}
 
 const libsQuery = "https://git.revolt.chat/api/v1/repos/android/final-markdown/releases/latest"
 
