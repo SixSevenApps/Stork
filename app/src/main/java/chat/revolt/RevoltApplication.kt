@@ -17,15 +17,20 @@ class RevoltApplication : Application() {
         super.onCreate()
         AndroidLogcatLogger.installOnDebuggableApp(this, minPriority = LogPriority.VERBOSE)
 
-        StrictMode.setVmPolicy(
-            StrictMode.VmPolicy
-                .Builder()
-                .apply {
-                    detectAll()
-                    penaltyLog()
-                }
-                .build()
-        )
+        if (BuildConfig.DEBUG) {
+            // Enable strict mode primarily to catch non-API usage, although we detect all
+            // violations for our reference.
+            // https://developer.android.com/reference/android/os/StrictMode
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy
+                    .Builder()
+                    .apply {
+                        detectAll()
+                        penaltyLog()
+                    }
+                    .build()
+            )
+        }
     }
 
     init {
