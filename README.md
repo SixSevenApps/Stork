@@ -1,14 +1,16 @@
-# Revolt for Android
+<div align="center">
+    <h1>Revolt for Android</h1>
+    <p>Official <a href="https://revolt.chat">Revolt</a> Android app.</p>
+    <br/><br/>
+    <div>
+        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="200">
+        <br/>
+    </div>
+    <small>Google Play is a trademark of Google LLC.</small>
+    <br/><br/><br/>
+</div>
 
 ## Description
-
-Official [Revolt](https://revolt.chat) Android app.
-
-<div style="text-align: center;">
-    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" width="200">
-    <small>Google Play is a trademark of Google LLC.</small>
-</div>
-  
 
 The codebase includes the app itself, as well as an internal library for interacting with the Revolt
 API. The app is written in Kotlin, and wholly
