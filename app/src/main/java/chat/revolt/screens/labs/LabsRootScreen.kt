@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import chat.revolt.api.settings.FeatureFlags
 import chat.revolt.screens.labs.ui.mockups.NewLoginExperienceMockup
 import chat.revolt.screens.labs.ui.sandbox.CoreLibSandbox
+import chat.revolt.screens.labs.ui.sandbox.FinalMarkdownSandbox
 import chat.revolt.screens.labs.ui.sandbox.GradientEditorSandbox
 import chat.revolt.screens.labs.ui.sandbox.JBMSandbox
 import chat.revolt.screens.labs.ui.sandbox.NewCardSandboxScreen
@@ -74,13 +75,15 @@ fun LabsRootScreen(topNav: NavController) {
                 composable("sandboxes/jbm") {
                     JBMSandbox(labsNav)
                 }
+                composable("sandboxes/finalmarkdown") {
+                    FinalMarkdownSandbox(labsNav)
+                }
                 composable("sandboxes/gradienteditor") {
                     GradientEditorSandbox(labsNav)
                 }
                 composable("sandboxes/librevolt") {
                     CoreLibSandbox(labsNav)
                 }
-
                 composable("sandboxes/newcard") {
                     NewCardSandboxScreen(labsNav)
                 }

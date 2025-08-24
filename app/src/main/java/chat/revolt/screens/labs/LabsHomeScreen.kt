@@ -180,6 +180,15 @@ fun LabsHomeScreen(navController: NavController, topNav: NavController) {
                         HorizontalDivider()
                         ListItem(
                             headlineContent = {
+                                Text("Final Markdown")
+                            },
+                            modifier = Modifier.clickable {
+                                navController.navigate("sandboxes/finalmarkdown")
+                            }
+                        )
+                        HorizontalDivider()
+                        ListItem(
+                            headlineContent = {
                                 Text("Gradient Editor")
                             },
                             modifier = Modifier.clickable {
