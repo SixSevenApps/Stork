@@ -23,9 +23,7 @@ I made for some QOL changes that aren't present in the current version at the ti
 
 Feel free to use this for whatever, but note that this is NOT the official Revolt android app. :)
 
-You can download the latest APK [here](https://github.com/alexjyong/android/releases/download/1.3.6bb-forked/app-release.apk).
-
-Or the latest debug APK [here](https://github.com/alexjyong/android/releases/download/1.3.6bb-forked/app-debug.apk).
+You can download the latest APK [here](https://github.com/alexjyong/android/releases/latest).
 
 ## Features Added
 <table>
