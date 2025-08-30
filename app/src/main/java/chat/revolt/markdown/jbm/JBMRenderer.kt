@@ -87,6 +87,7 @@ import chat.revolt.composables.generic.RemoteImage
 import chat.revolt.composables.generic.UserAvatar
 import chat.revolt.composables.markdown.Annotations
 import chat.revolt.composables.utils.detectTapGesturesConditionalConsume
+import chat.revolt.markdown.jbm.RSMElementTypes
 import chat.revolt.ui.theme.FragmentMono
 import chat.revolt.ui.theme.isThemeDark
 import dev.snipme.highlights.Highlights
@@ -107,6 +108,7 @@ enum class JBMAnnotations(val tag: String, val clickable: Boolean) {
     URL("URL", true),
     UserMention("UserMention", true),
     ChannelMention("ChannelMention", true),
+    Spoiler("Spoiler", true),
     RoleMention("RoleMention", false),
     CustomEmote("CustomEmote", true),
     Timestamp("Timestamp", false),
@@ -130,6 +132,8 @@ data class JBMarkdownTreeState(
     val sourceText: String = "",
     val listDepth: Int = 0,
     val fontSizeMultiplier: Float = 1f,
+    val revealedSpoilers: Set<String> = emptySet(),
+    val onSpoilerToggle: ((String) -> Unit)? = null,
     val linksClickable: Boolean = true,
     val currentServer: String? = null,
     val embedded: Boolean = false,
@@ -150,6 +154,7 @@ val avatarPadding = 2.dp
 @JBM
 fun JBMRenderer(content: String, modifier: Modifier = Modifier) {
     var tree by remember { mutableStateOf(JBMApi.parse(content)) }
+    var revealedSpoilers by remember { mutableStateOf(setOf<String>()) }
 
     LaunchedEffect(content) {
         tree = JBMApi.parse(content)
@@ -158,6 +163,14 @@ fun JBMRenderer(content: String, modifier: Modifier = Modifier) {
     CompositionLocalProvider(
         LocalJBMarkdownTreeState provides LocalJBMarkdownTreeState.current.copy(
             sourceText = content,
+            revealedSpoilers = revealedSpoilers,
+            onSpoilerToggle = { spoilerId ->
+                revealedSpoilers = if (revealedSpoilers.contains(spoilerId)) {
+                    revealedSpoilers - spoilerId
+                } else {
+                    revealedSpoilers + spoilerId
+                }
+            },
             colors = JBMColors(
                 clickable = MaterialTheme.colorScheme.primary,
                 clickableBackground = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
@@ -183,14 +196,22 @@ fun JBMRenderer(content: String, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
 private fun annotateText(
     state: JBMarkdownTreeState,
-    node: ASTNode
+    node: ASTNode,
+    revealedSpoilers: Set<String> = emptySet()
 ): AnnotatedString {
+    val surfaceContainer = MaterialTheme.colorScheme.surfaceContainer
+    val onSurface = MaterialTheme.colorScheme.onSurface
+    val contentColor = LocalContentColor.current
     val sourceText = state.sourceText
 
-    return try {
-        buildAnnotatedString {
+    return buildAnnotatedString {
+            if (node.type.toString().contains("SPOILER", ignoreCase = true) || 
+                sourceText.contains("||")) {
+                android.util.Log.d("JBMRenderer", "Processing node: ${node.type}, text contains spoilers: ${sourceText.contains("||")}") 
+            }
             when (node.type) {
                 MarkdownTokenTypes.TEXT -> {
                     val source = if (state.embedded) {
@@ -207,7 +228,7 @@ private fun annotateText(
                     if (userId == contents || !userId.isUlid()) {
                         // Invalid user mention. Append as if it were regular text.
                         for (child in node.children) {
-                            append(annotateText(state, child))
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     } else {
                         pushStringAnnotation(
@@ -238,7 +259,7 @@ private fun annotateText(
                     if (channelId == contents || !channelId.isUlid()) {
                         // Invalid channel mention. Append as if it were regular text.
                         for (child in node.children) {
-                            append(annotateText(state, child))
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     } else {
                         pushStringAnnotation(
@@ -265,7 +286,7 @@ private fun annotateText(
                     if (roleId == contents || !roleId.isUlid() || state.currentServer == null) {
                         // Invalid role mention. Append as if it were regular text.
                         for (child in node.children) {
-                            append(annotateText(state, child))
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     } else {
                         val server = RevoltAPI.serverCache[state.currentServer]
@@ -309,7 +330,7 @@ private fun annotateText(
                     if (emoteId == contents || !emoteId.isUlid()) {
                         // Invalid custom emote. Append as if it were regular text.
                         for (child in node.children) {
-                            append(annotateText(state, child))
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     } else {
                         pushStringAnnotation(
@@ -319,6 +340,30 @@ private fun annotateText(
                         appendInlineContent(JBMAnnotations.CustomEmote.tag, emoteId)
                         pop()
                     }
+                }
+
+                RSMElementTypes.SPOILER -> {
+                    android.util.Log.d("JBMRenderer", "Found SPOILER node with ${node.children.size} children")
+                    val spoilerContent = node.children.joinToString("") { it.getTextInNode(sourceText).toString() }
+                    val spoilerId = "spoiler_${System.identityHashCode(node)}"
+                    val isRevealed = revealedSpoilers.contains(spoilerId)
+                    android.util.Log.d("JBMRenderer", "Spoiler content: '$spoilerContent', ID: $spoilerId, revealed: $isRevealed")
+                    
+                    pushStringAnnotation(
+                        tag = JBMAnnotations.Spoiler.tag,
+                        annotation = spoilerId
+                    )
+                    withStyle(
+                        SpanStyle(
+                            background = if (isRevealed) surfaceContainer else onSurface,
+                            color = if (isRevealed) contentColor else onSurface
+                        )
+                    ) {
+                        for (child in node.children) {
+                            append(annotateText(state, child, revealedSpoilers))
+                        }
+                    }
+                    pop()
                 }
 
                 MarkdownTokenTypes.ATX_HEADER -> {
@@ -332,7 +377,7 @@ private fun annotateText(
                 MarkdownElementTypes.ATX_5,
                 MarkdownElementTypes.ATX_6 -> {
                     for (child in node.children) {
-                        append(annotateText(state, child))
+                        append(annotateText(state, child, revealedSpoilers))
                     }
                 }
 
@@ -341,7 +386,7 @@ private fun annotateText(
                         // Skip the first child and the last child
                         // because they are the asterisk characters
                         for (child in node.children.subList(1, node.children.size - 1)) {
-                            append(annotateText(state, child))
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     }
                 }
@@ -351,17 +396,21 @@ private fun annotateText(
                         // Skip the first two children and the last two children
                         // because they are the asterisk characters
                         for (child in node.children.subList(2, node.children.size - 2)) {
-                            append(annotateText(state, child))
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     }
                 }
 
                 GFMElementTypes.STRIKETHROUGH -> {
                     withStyle(SpanStyle(textDecoration = TextDecoration.LineThrough)) {
-                        // Skip the first two children and the last two children
-                        // because they are the tilde characters
-                        for (child in node.children.subList(2, node.children.size - 2)) {
-                            append(annotateText(state, child))
+                        // More defensive children handling
+                        val childrenToProcess = if (node.children.size >= 4) {
+                            node.children.subList(2, node.children.size - 2)
+                        } else {
+                            node.children
+                        }
+                        for (child in childrenToProcess) {
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     }
                 }
@@ -377,7 +426,7 @@ private fun annotateText(
                             removeItemCount,
                             node.children.size - removeItemCount
                         )) {
-                            append(annotateText(state, child))
+                            append(annotateText(state, child, revealedSpoilers))
                         }
                     }
                 }
@@ -396,7 +445,7 @@ private fun annotateText(
                 MarkdownElementTypes.ORDERED_LIST,
                 MarkdownElementTypes.LIST_ITEM -> {
                     for (child in node.children) {
-                        append(annotateText(state, child))
+                        append(annotateText(state, child, revealedSpoilers))
                     }
                 }
 
@@ -409,18 +458,36 @@ private fun annotateText(
                     append(" ")
                 }
 
-                MarkdownElementTypes.PARAGRAPH,
+                MarkdownElementTypes.PARAGRAPH -> {
+                    val paragraphText = node.getTextInNode(sourceText).toString()
+                    if (paragraphText.contains("||")) {
+                        android.util.Log.d("JBMRenderer", "Paragraph contains spoilers: '$paragraphText'")
+                        val spoilerRegex = Regex("\\|\\|(.+?)\\|\\|")
+                        if (spoilerRegex.containsMatchIn(paragraphText)) {
+                            processSpoilerParagraph(paragraphText, state, revealedSpoilers, surfaceContainer, onSurface, contentColor)
+                        } else {
+                            for (child in node.children) {
+                                append(annotateText(state, child, revealedSpoilers))
+                            }
+                        }
+                    } else {
+                        for (child in node.children) {
+                            append(annotateText(state, child, revealedSpoilers))
+                        }
+                    }
+                }
+
                 MarkdownElementTypes.HTML_BLOCK,
                 MarkdownTokenTypes.HTML_TAG -> {
                     for (child in node.children) {
-                        append(annotateText(state, child))
+                        append(annotateText(state, child, revealedSpoilers))
                     }
                 }
 
                 MarkdownTokenTypes.ATX_CONTENT -> {
                     // Drop WHITE_SPACE children at the start
                     for (child in node.children.dropWhile { it.type == MarkdownTokenTypes.WHITE_SPACE }) {
-                        append(annotateText(state, child))
+                        append(annotateText(state, child, revealedSpoilers))
                     }
                 }
 
@@ -493,30 +560,67 @@ private fun annotateText(
                         append("[${node.type.name}]{\n")
                     }
                     for (child in node.children) {
-                        append(annotateText(state, child))
+                        append(annotateText(state, child, revealedSpoilers))
                     }
                     withStyle(SpanStyle(color = Color.Cyan)) {
                         append("\n}")
                     }
                 }
             }
-        }
-    } catch (e: Exception) {
-        buildAnnotatedString {
-            withStyle(SpanStyle(color = Color(0xFFFF0000), background = Color(0xFF000000))) {
-                append("[${node.type.name}] Error: ${e.message}")
-            }
-
-            Log.e("JBMRenderer", "Error rendering node: ${node.type.name}", e)
-        }
     }
+}
+
+private fun AnnotatedString.Builder.processSpoilerParagraph(
+    text: String,
+    state: JBMarkdownTreeState,
+    revealedSpoilers: Set<String>,
+    surfaceContainer: Color,
+    onSurface: Color,
+    contentColor: Color
+) {
+    val spoilerRegex = Regex("\\|\\|(.+?)\\|\\|")
+    var lastIndex = 0
+    
+    android.util.Log.d("JBMRenderer", "Processing spoiler paragraph: '$text'")
+    
+    for (match in spoilerRegex.findAll(text)) {
+        android.util.Log.d("JBMRenderer", "Found spoiler match: '${match.value}'")
+        
+        // Append text before spoiler
+        append(text.substring(lastIndex, match.range.first))
+        
+        // Handle spoiler
+        val spoilerContent = match.groupValues[1]
+        val spoilerId = "spoiler_${match.range.first}_${spoilerContent.hashCode()}"
+        val isRevealed = revealedSpoilers.contains(spoilerId)
+        
+        android.util.Log.d("JBMRenderer", "Spoiler content: '$spoilerContent', revealed: $isRevealed")
+        
+        pushStringAnnotation(
+            tag = JBMAnnotations.Spoiler.tag,
+            annotation = spoilerId
+        )
+        withStyle(
+            SpanStyle(
+                background = if (isRevealed) surfaceContainer else onSurface,
+                color = if (isRevealed) contentColor else onSurface
+            )
+        ) {
+            append(spoilerContent)
+        }
+        pop()
+        
+        lastIndex = match.range.last + 1
+    }
+    
+    append(text.substring(lastIndex))
 }
 
 @Composable
 private fun JBMText(node: ASTNode, modifier: Modifier) {
     var layoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     val mdState = LocalJBMarkdownTreeState.current
-    val annotatedText = remember(node) { annotateText(mdState, node) }
+    val annotatedText = annotateText(mdState, node, mdState.revealedSpoilers)
     val colours = MaterialTheme.colorScheme
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -616,6 +720,11 @@ private fun JBMText(node: ASTNode, modifier: Modifier) {
                                     Action.EmoteInfo(item)
                                 )
                             }
+                            return@handler true
+                        }
+
+                        JBMAnnotations.Spoiler.tag -> {
+                            mdState.onSpoilerToggle?.invoke(item)
                             return@handler true
                         }
                     }

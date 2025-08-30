@@ -12,10 +12,14 @@ import chat.revolt.ndk.Stendal
 @Composable
 fun RichMarkdown(input: String, modifier: Modifier = Modifier) {
     Column(modifier) {
-        if (Experiments.useKotlinBasedMarkdownRenderer.isEnabled) {
-            JBMRenderer(input)
-        } else {
-            MarkdownTree(node = Stendal.render(input))
+        when {
+            Experiments.useFinalMarkdownRenderer.isEnabled -> {
+                JBMRenderer(input)
+            }
+            else -> {
+                JBMRenderer(input)
+            }
         }
+        
     }
 }
