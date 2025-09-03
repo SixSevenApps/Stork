@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    if: ${{ false }} # at the moment this simply wastes our minutes, we will enable it when we have unit tests etc.
 
     runs-on: ubuntu-latest
 
