@@ -32,10 +32,10 @@ jobs:
         run:  echo "${{ secrets.REVOLTBUILD_PROPERTIES_BASE64 }}" | base64 --decode > revoltbuild.properties
 
       - name: Build with Gradle
-        run: ./gradlew --no-daemon assembleRelease
+        run: ./gradlew --no-daemon assembleRelease -x app:uploadSentryProguardMappingsRelease
 
       - name: Archive release APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release-apk
           retention-days: 5
