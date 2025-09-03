@@ -21,6 +21,12 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
+        
+      - uses: denoland/setup-deno@v2
+        with:
+          # setting `cache-hash` implies `cache: true` and will replace
+          # the default cache-hash of `${{ hashFiles('**/deno.lock') }}`
+          cache-hash: ${{ hashFiles('**/deno.json') }}
 
       - name: Set up repo
         run: chmod +x gradlew && deno run -A scripts/download_deps.ts --yes && cp revoltbuild.properties.example revoltbuild.properties && cp sentry.properties.example sentry.properties && cp app/google-services.json.example app/google-services.json && git submodule update --init --recursive
