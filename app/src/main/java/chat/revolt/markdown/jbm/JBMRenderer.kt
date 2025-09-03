@@ -83,6 +83,7 @@ import chat.revolt.api.schemas.isInviteUri
 import chat.revolt.api.settings.LoadedSettings
 import chat.revolt.callbacks.Action
 import chat.revolt.callbacks.ActionChannel
+import chat.revolt.composables.generic.EmojiAwareText
 import chat.revolt.composables.generic.RemoteImage
 import chat.revolt.composables.generic.UserAvatar
 import chat.revolt.composables.markdown.Annotations
@@ -138,6 +139,7 @@ data class JBMarkdownTreeState(
     val currentServer: String? = null,
     val embedded: Boolean = false,
     val singleLine: Boolean = false,
+    val enhanced: Boolean = false,
     val colors: JBMColors = JBMColors(
         clickable = Color(0xFFFF00FF),
         clickableBackground = Color(0x2000FF00)
@@ -153,11 +155,14 @@ val avatarPadding = 2.dp
 @Composable
 @JBM
 fun JBMRenderer(content: String, modifier: Modifier = Modifier) {
-    var tree by remember { mutableStateOf(JBMApi.parse(content)) }
+    val state = LocalJBMarkdownTreeState.current
+    val flavor = if (state.enhanced) RSMEnhancedFlavourDescriptor() else RSMFlavourDescriptor()
+    
+    var tree by remember { mutableStateOf(JBMApi.parse(content, flavor)) }
     var revealedSpoilers by remember { mutableStateOf(setOf<String>()) }
 
-    LaunchedEffect(content) {
-        tree = JBMApi.parse(content)
+    LaunchedEffect(content, state.enhanced) {
+        tree = JBMApi.parse(content, flavor)
     }
 
     CompositionLocalProvider(
@@ -324,23 +329,6 @@ private fun annotateText(
                     }
                 }
 
-                RSMElementTypes.CUSTOM_EMOTE -> {
-                    val contents = node.getTextInNode(sourceText).toString()
-                    val emoteId = contents.removeSurrounding(":", ":")
-                    if (emoteId == contents || !emoteId.isUlid()) {
-                        // Invalid custom emote. Append as if it were regular text.
-                        for (child in node.children) {
-                            append(annotateText(state, child, revealedSpoilers))
-                        }
-                    } else {
-                        pushStringAnnotation(
-                            tag = JBMAnnotations.CustomEmote.tag,
-                            annotation = emoteId
-                        )
-                        appendInlineContent(JBMAnnotations.CustomEmote.tag, emoteId)
-                        pop()
-                    }
-                }
 
                 RSMElementTypes.SPOILER -> {
                     android.util.Log.d("JBMRenderer", "Found SPOILER node with ${node.children.size} children")
@@ -714,14 +702,6 @@ private fun JBMText(node: ASTNode, modifier: Modifier) {
                             return@handler true
                         }
 
-                        JBMAnnotations.CustomEmote.tag -> {
-                            scope.launch {
-                                ActionChannel.send(
-                                    Action.EmoteInfo(item)
-                                )
-                            }
-                            return@handler true
-                        }
 
                         JBMAnnotations.Spoiler.tag -> {
                             mdState.onSpoilerToggle?.invoke(item)
@@ -753,11 +733,10 @@ private fun JBMText(node: ASTNode, modifier: Modifier) {
         return@handler false
     }
 
-    Text(
+    EmojiAwareText(
         text = annotatedText,
         onTextLayout = { layoutResult = it },
         maxLines = if (mdState.singleLine) 1 else Int.MAX_VALUE,
-        overflow = if (mdState.singleLine) TextOverflow.Ellipsis else TextOverflow.Clip,
         modifier = modifier.pointerInput(onClick, onLongClick) {
             detectTapGesturesConditionalConsume(
                 onTap = { pos ->
@@ -847,36 +826,6 @@ private fun JBMText(node: ASTNode, modifier: Modifier) {
                                         ?: SolidColor(MaterialTheme.colorScheme.primaryContainer)
                                 )
                                 .size((LocalTextStyle.current.fontSize * 1.5).toDp() - (avatarPadding * 2))
-                        )
-                    }
-                }
-            },
-            JBMAnnotations.CustomEmote.tag to InlineTextContent(
-                placeholder = Placeholder(
-                    width = LocalTextStyle.current.fontSize * 1.5,
-                    height = LocalTextStyle.current.fontSize * 1.5,
-                    placeholderVerticalAlign = PlaceholderVerticalAlign.Center
-                ),
-            ) { id ->
-                val emote = RevoltAPI.emojiCache[id]
-                if (emote == null) {
-                    scope.launch {
-                        try {
-                            RevoltAPI.emojiCache[id] = fetchEmoji(id)
-                        } catch (e: Exception) {
-                            // no-op
-                        }
-                    }
-                    return@InlineTextContent
-                } else {
-                    with(LocalDensity.current) {
-                        RemoteImage(
-                            url = "$REVOLT_FILES/emojis/${id}",
-                            description = emote.name,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .width((LocalTextStyle.current.fontSize * 1.5).toDp())
-                                .height((LocalTextStyle.current.fontSize * 1.5).toDp())
                         )
                     }
                 }

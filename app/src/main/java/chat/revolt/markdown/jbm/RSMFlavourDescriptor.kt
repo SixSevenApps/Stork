@@ -1,10 +1,8 @@
 package chat.revolt.markdown.jbm
 
 import chat.revolt.markdown.jbm.sequentialparsers.ChannelMentionParser
-import chat.revolt.markdown.jbm.sequentialparsers.CustomEmoteParser
 import chat.revolt.markdown.jbm.sequentialparsers.MassMentionParser
 import chat.revolt.markdown.jbm.sequentialparsers.RoleMentionParser
-import chat.revolt.markdown.jbm.sequentialparsers.SpoilerParser
 import chat.revolt.markdown.jbm.sequentialparsers.UserMentionParser
 import org.intellij.markdown.MarkdownTokenTypes
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
@@ -21,7 +19,7 @@ import org.intellij.markdown.parser.sequentialparsers.impl.InlineLinkParser
 import org.intellij.markdown.parser.sequentialparsers.impl.MathParser
 import org.intellij.markdown.parser.sequentialparsers.impl.ReferenceLinkParser
 
-class RSMFlavourDescriptor : GFMFlavourDescriptor() {
+open class RSMFlavourDescriptor : GFMFlavourDescriptor() {
     override val sequentialParserManager = object : SequentialParserManager() {
         override fun getParserSequence(): List<SequentialParser> {
             return listOf(
@@ -35,9 +33,7 @@ class RSMFlavourDescriptor : GFMFlavourDescriptor() {
                 UserMentionParser(),
                 ChannelMentionParser(),
                 RoleMentionParser(),
-                MassMentionParser(),
-                CustomEmoteParser(),
-                SpoilerParser()
+                MassMentionParser()
             )
         }
     }
