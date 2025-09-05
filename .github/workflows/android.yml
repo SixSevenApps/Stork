@@ -1,10 +1,10 @@
-name: Android CI
+name: Build Android APKs
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  buildReleaseAPK:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +17,6 @@ jobs:
           java-version: '21'
           distribution: 'oracle'
           cache: gradle
-
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
@@ -37,7 +36,7 @@ jobs:
       - name: Add revoltbuild.properties from the revoltbuildPropertiesbase64 secret
         run:  echo "${{ secrets.REVOLTBUILD_PROPERTIES_BASE64 }}" | base64 --decode > revoltbuild.properties
 
-      - name: Build with Gradle
+      - name: Build Release APK
         run: ./gradlew --no-daemon assembleRelease -x app:uploadSentryProguardMappingsRelease
 
       - name: Archive release APK
@@ -47,3 +46,40 @@ jobs:
           retention-days: 5
           path: |
             app/build/outputs/apk/release/app-release.apk
+
+  buildDebugAPK:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+      - name: set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'oracle'
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+        
+      - uses: denoland/setup-deno@v2
+        with:
+          # setting `cache-hash` implies `cache: true` and will replace
+          # the default cache-hash of `${{ hashFiles('**/deno.lock') }}`
+          cache-hash: ${{ hashFiles('**/deno.json') }}
+
+      - name: Set up repo
+        run: chmod +x gradlew && deno run -A scripts/download_deps.ts --yes && cp revoltbuild.properties.example revoltbuild.properties && cp sentry.properties.example sentry.properties && cp app/google-services.json.example app/google-services.json && git submodule update --init --recursive
+
+      - name: Build Debug APK
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Archive debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          retention-days: 5
+          path: |
+            app/build/outputs/apk/debug/app-debug.apk
