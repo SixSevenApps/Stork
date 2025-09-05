@@ -2,14 +2,20 @@ package chat.revolt.screens.settings
 
 import android.content.Intent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,10 +24,16 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -33,23 +45,87 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import chat.revolt.BuildConfig
 import chat.revolt.R
 import chat.revolt.activities.InviteActivity
 import chat.revolt.api.RevoltAPI
+import chat.revolt.api.internals.UpdateChecker
+import chat.revolt.api.internals.UpdateInfo
 import chat.revolt.api.settings.FeatureFlags
 import chat.revolt.api.settings.LoadedSettings
 import chat.revolt.composables.generic.ListHeader
+import chat.revolt.composables.generic.UpdateBanner
 import chat.revolt.persistence.KVStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import android.content.Context
 
 @HiltViewModel
 class SettingsScreenViewModel @Inject constructor(
-    private val kvStorage: KVStorage
+    private val kvStorage: KVStorage,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
+    private val updateChecker = UpdateChecker(context, kvStorage)
+    
+    var isUpdateCheckerEnabled by mutableStateOf(false)
+        private set
+    
+    var isCheckingForUpdates by mutableStateOf(false)
+        private set
+    
+    var manualCheckResult by mutableStateOf<String?>(null)
+        private set
+    
+    var foundUpdate by mutableStateOf<UpdateInfo?>(null)
+        private set
+    
+    init {
+        viewModelScope.launch {
+            isUpdateCheckerEnabled = updateChecker.isUpdateCheckerEnabled()
+        }
+    }
+    
+    fun toggleUpdateChecker(enabled: Boolean) {
+        isUpdateCheckerEnabled = enabled
+        viewModelScope.launch {
+            updateChecker.setUpdateCheckerEnabled(enabled)
+        }
+    }
+    
+    fun manualCheckForUpdates() {
+        if (isCheckingForUpdates) return
+        
+        viewModelScope.launch {
+            isCheckingForUpdates = true
+            manualCheckResult = null
+            foundUpdate = null
+            
+            try {
+                val updateInfo = updateChecker.checkForUpdates()
+                if (updateInfo != null) {
+                    foundUpdate = updateInfo
+                    manualCheckResult = context.getString(R.string.update_check_available, updateInfo.version)
+                } else {
+                    manualCheckResult = context.getString(R.string.update_check_up_to_date)
+                }
+            } catch (e: Exception) {
+                manualCheckResult = context.getString(R.string.update_check_failed)
+            } finally {
+                isCheckingForUpdates = false
+            }
+        }
+    }
+    
+    fun clearManualCheckResult() {
+        manualCheckResult = null
+        foundUpdate = null
+    }
+    
     fun logout() {
         runBlocking {
             kvStorage.remove("sessionToken")
@@ -104,6 +180,13 @@ fun SettingsScreen(
                         .fillMaxSize()
                         .padding(vertical = 10.dp)
                 ) {
+                    viewModel.foundUpdate?.let { updateInfo ->
+                        UpdateBanner(
+                            updateInfo = updateInfo,
+                            onDismiss = { viewModel.clearManualCheckResult() }
+                        )
+                    }
+                    
                     ListHeader {
                         Text(stringResource(R.string.settings_category_account))
                     }
@@ -215,6 +298,63 @@ fun SettingsScreen(
                             .clickable {
                                 navController.navigate("settings/chat")
                             }
+                    )
+
+                    ListItem(
+                        headlineContent = {
+                            Text(text = "App Updates")
+                        },
+                        supportingContent = {
+                            Column {
+                                
+                                viewModel.manualCheckResult?.let { result ->
+                                    Text(
+                                        text = result,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = if (viewModel.foundUpdate != null) {
+                                            MaterialTheme.colorScheme.primary
+                                        } else {
+                                            MaterialTheme.colorScheme.onSurfaceVariant
+                                        },
+                                        modifier = Modifier.padding(top = 2.dp)
+                                    )
+                                }
+                            }
+                        },
+                        leadingContent = {
+                            SettingsIcon {
+                                Icon(
+                                    painter = painterResource(R.drawable.icn_download_24dp),
+                                    contentDescription = null,
+                                )
+                            }
+                        },
+                        trailingContent = {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                // Manual check button - more compact
+                                Button(
+                                    onClick = { viewModel.manualCheckForUpdates() },
+                                    enabled = !viewModel.isCheckingForUpdates
+                                ) {
+                                    if (viewModel.isCheckingForUpdates) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.width(16.dp),
+                                            strokeWidth = 2.dp
+                                        )
+                                    } else {
+                                        Text(stringResource(R.string.update_check_now))
+                                    }
+                                }
+                                
+                                Switch(
+                                    checked = viewModel.isUpdateCheckerEnabled,
+                                    onCheckedChange = viewModel::toggleUpdateChecker
+                                )
+                            }
+                        }
                     )
 
                     ListHeader {
