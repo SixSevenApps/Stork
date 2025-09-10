@@ -40,12 +40,13 @@ You can download the latest APK [here](https://github.com/alexjyong/android/rele
   <tr>
     <td colspan="2" align="center" valign="top">
       <strong>Server context menu on long press</strong><br>
-      <img src="https://github.com/user-attachments/assets/1450ea4c-a283-4ac3-8a0a-8e9f1adb436b" width="300" alt="Server Context Menu">
+      <img width="1080" height="590" alt="image" src="https://github.com/user-attachments/assets/034eea4f-0d21-4ddc-8b44-b7c70dde8965" alt="Server Context Menu" />
     </td>
   </tr>
   <tr>
     <td colspan="2" align="center" valign="top">
       <strong>Recently used emojis</strong><br>
+        
       <img src="https://github.com/user-attachments/assets/6f1e126a-8e73-49ee-a5d1-c4841907e14a" width="600" alt="Recently Used Emojis">
     </td>
   </tr>
