@@ -46,8 +46,7 @@ You can download the latest APK [here](https://github.com/alexjyong/android/rele
   <tr>
     <td colspan="2" align="center" valign="top">
       <strong>Recently used emojis</strong><br>
-        
-      <img src="https://github.com/user-attachments/assets/6f1e126a-8e73-49ee-a5d1-c4841907e14a" width="600" alt="Recently Used Emojis">
+      <img src="https://github.com/user-attachments/assets/6f1e126a-8e73-49ee-a5d1-c4841907e14a" width="600" alt="Recently Used Emojis"/>
     </td>
   </tr>
 </table>
