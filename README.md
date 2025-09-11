@@ -11,9 +11,6 @@
     <br/><br/><br/>
 </div>
 
-
-
-
 ## Description
 
 NOTE: This is a forked version of the Android app for the [Revolt](https://revolt.chat) chat platform.
@@ -24,6 +21,8 @@ I made for some QOL changes that aren't present in the current version at the ti
 Feel free to use this for whatever, but note that this is NOT the official Revolt android app. :)
 
 You can download the latest APK [here](https://github.com/alexjyong/android/releases/latest).
+
+For support, discussion, updates and other things, visit our support server on [Revolt](https://rvlt.gg/C7qQMwsZ).
 
 ## Features Added
 <table>
