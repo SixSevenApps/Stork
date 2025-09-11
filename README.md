@@ -16,7 +16,9 @@
 NOTE: This is a forked version of the Android app for the [Revolt](https://revolt.chat) chat platform.
 I am not affilated with the Revolt Team, nor is this an official Revolt product.
 
-I made for some QOL changes that aren't present in the current version at the time of writing.
+I made this for some QOL changes that aren't present in the current version at the time of writing.
+
+This app also works on de-googled phones as well!
 
 Feel free to use this for whatever, but note that this is NOT the official Revolt android app. :)
 
