@@ -29,6 +29,11 @@ For support, discussion, updates and other things, visit our support server on [
 ## Features Added
 <table>
   <tr>
+      <td colspan="2" width="100%" valign="top">
+        <strong>Voice messages!</strong><br>
+          <img width="1080" height="707" alt="image" src="https://github.com/user-attachments/assets/8b794d8e-46cc-407e-84aa-99b4128d5922" />
+       </td>
+  <tr>
     <td width="50%" valign="top" align="center">
       <strong>Emojis next to channel names</strong><br>
       <img src="https://github.com/user-attachments/assets/6c37f059-47ef-4028-aac9-ef233f7a85e4" width="300" alt="Channel Emojis">
