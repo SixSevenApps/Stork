@@ -19,6 +19,7 @@ import chat.revolt.screens.labs.ui.sandbox.GradientEditorSandbox
 import chat.revolt.screens.labs.ui.sandbox.JBMSandbox
 import chat.revolt.screens.labs.ui.sandbox.NewCardSandboxScreen
 import chat.revolt.screens.labs.ui.sandbox.SettingsDslSandbox
+import chat.revolt.screens.labs.ui.sandbox.TelecomSandbox
 
 annotation class LabsFeature
 
@@ -86,6 +87,9 @@ fun LabsRootScreen(topNav: NavController) {
                 }
                 composable("sandboxes/newcard") {
                     NewCardSandboxScreen(labsNav)
+                }
+                composable("sandboxes/telecom") {
+                    TelecomSandbox(labsNav)
                 }
             }
         }

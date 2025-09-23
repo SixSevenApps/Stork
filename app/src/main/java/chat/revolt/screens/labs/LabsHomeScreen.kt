@@ -219,6 +219,15 @@ fun LabsHomeScreen(navController: NavController, topNav: NavController) {
                             }
                         )
                         HorizontalDivider()
+                        ListItem(
+                            headlineContent = {
+                                Text("Telecom")
+                            },
+                            modifier = Modifier.clickable {
+                                navController.navigate("sandboxes/telecom")
+                            }
+                        )
+                        HorizontalDivider()
                     }
                 }
             }
