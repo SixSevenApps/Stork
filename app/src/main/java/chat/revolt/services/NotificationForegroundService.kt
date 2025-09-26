@@ -169,20 +169,41 @@ class NotificationForegroundService : Service() {
     }
 
     private suspend fun handleNewMessage(messageFrame: MessageFrame) {
+        try {
+            val channelId = messageFrame.channel ?: return
+            val channel = RevoltAPI.channelCache[channelId]
+            val serverId = channel?.server
+
+            if (messageFrame.author == RevoltAPI.selfId) {
+                return
+            }
+
+            val selfId = RevoltAPI.selfId ?: return
+            
+            val suppressEveryoneMentions = NotificationSettingsProvider.shouldSuppressEveryoneMentions(channelId, serverId)
+            val containsEveryone = messageFrame.content?.contains("@everyone") == true
+            val containsHere = messageFrame.content?.contains("@here") == true
+            
+            if (suppressEveryoneMentions && (containsEveryone || containsHere)) {
+                return
+            }
+            
+            val hasDirectMention = messageFrame.mentions?.contains(selfId) == true
+            val hasMassMention = containsEveryone || containsHere
+            
         withContext(Dispatchers.Main) {
-            try {
-                val channelId = messageFrame.channel ?: return@withContext
-                val channel = RevoltAPI.channelCache[channelId]
-                val serverId = channel?.server
-
-                if (messageFrame.author == RevoltAPI.selfId) {
-                    return@withContext
+                
+                var hasRoleMention = false
+                if (serverId != null && messageFrame.content != null) {
+                    val mentionedRoleIds = chat.revolt.internals.text.MessageProcessor.findMentionedRoleIDs(messageFrame.content)
+                    if (mentionedRoleIds.isNotEmpty()) {
+                        val member = RevoltAPI.members.getMember(serverId, selfId)
+                        val userRoles = member?.roles ?: emptyList()
+                        hasRoleMention = mentionedRoleIds.any { roleId -> userRoles.contains(roleId) }
+                    }
                 }
-
-                val selfId = RevoltAPI.selfId ?: return@withContext
-                val isMention = messageFrame.mentions?.contains(selfId) == true ||
-                        messageFrame.content?.contains("@everyone") == true ||
-                        messageFrame.content?.contains("@here") == true
+                
+                val isMention = hasDirectMention || hasMassMention || hasRoleMention
 
                 if (shouldNotifyMessage(channelId, serverId, isMention)) {
                     val author = RevoltAPI.userCache[messageFrame.author]
@@ -199,9 +220,9 @@ class NotificationForegroundService : Service() {
                 } else {
                     logcat(LogPriority.DEBUG) { "Notification filtered out for channel $channelId" }
                 }
-            } catch (e: Exception) {
-                logcat(LogPriority.ERROR) { "Error handling message notification: ${e.message}" }
             }
+        } catch (e: Exception) {
+            logcat(LogPriority.ERROR) { "Error handling message notification: ${e.message}" }
         }
     }
 

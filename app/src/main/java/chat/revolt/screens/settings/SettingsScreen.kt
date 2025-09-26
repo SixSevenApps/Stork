@@ -327,7 +327,6 @@ fun SettingsScreen(
                         },
                         supportingContent = {
                             Column {
-                                Text(text = stringResource(id = R.string.settings_language))
                                 viewModel.manualCheckResult?.let { result ->
                                     Text(
                                         text = result,
@@ -529,7 +528,7 @@ fun SettingsScreen(
                                     InviteActivity::class.java
                                 ).setAction(Intent.ACTION_VIEW)
 
-                                intent.data = "https://rvlt.gg/Testers".toUri()
+                                intent.data = "https://rvlt.gg/tyKYccTr".toUri()
                                 context.startActivity(intent)
                             }
                     )
