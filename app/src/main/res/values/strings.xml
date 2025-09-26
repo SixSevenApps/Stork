@@ -641,7 +641,7 @@
     <string name="voice_error_generic">An error occurred. Please try again later.</string>
 
     <string name="spark_notifications_rationale">Stay in the loop</string>
-    <string name="spark_notifications_rationale_description">Enable notifications to be kept up to date with messages and mentions.</string>
+    <string name="spark_notifications_rationale_description">Enable notifications to be kept up to date with messages and mentions. Note you will have to enable background services in notification settings for this to work fully.</string>
     <string name="spark_notifications_rationale_cta">Enable notifications</string>
     <string name="spark_notifications_rationale_dismiss">Not now</string>
 
@@ -757,6 +757,44 @@
     <string name="settings_chat_hint_poorly_formed_settings_keys_key_unknown">%1$s (unknown)</string>
     <string name="settings_chat_hint_poorly_formed_settings_keys_reset">Reset %1$s settings</string>
 
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notifications_header">App Notifications</string>
+    <string name="settings_notifications_description">Get notified instantly about new messages from your friends and servers.</string>
+    <string name="settings_notifications_background_service">Real-time Notifications</string>
+    <string name="settings_notifications_background_service_description">Receive notifications instantly when the app is closed. Uses more battery but ensures you never miss a message.</string>
+    <string name="settings_notifications_permission_required">Notification permission required</string>
+    <string name="settings_notifications_permission_denied">Notifications are disabled. Please enable them in your device settings to receive message notifications.</string>
+    <string name="settings_notifications_grant_permission">Grant Permission</string>
+    <string name="settings_notifications_open_system_settings">Open Settings</string>
+    <string name="settings_notifications_battery_optimization">Battery Optimization</string>
+    <string name="settings_notifications_battery_optimization_description">Disable battery optimization to ensure reliable background notifications. May impact battery life.</string>
+    <string name="settings_notifications_battery_optimized">Battery optimization enabled - notifications may be delayed</string>
+    <string name="settings_notifications_battery_not_optimized">Battery optimization disabled - notifications will arrive reliably</string>
+    <string name="settings_notifications_open_battery_settings">Battery Settings</string>
+    <string name="toast_opening_battery_settings">Opening battery optimization settings...</string>
+    <string name="toast_find_battery_optimization">Find and disable battery optimization for Revolt</string>
+    <string name="toast_find_battery_in_app_info">Please find battery settings in app info</string>
+    <string name="toast_battery_settings_manual">Unable to open settings. Please manually disable battery optimization for Revolt.</string>
+    <string name="toast_battery_optimization_not_available">Battery optimization not available on this Android version</string>
+
+    <!-- Notification Context Menu -->
+    <string name="notification_menu_title">Notifications</string>
+    <string name="notification_state_all">All Messages</string>
+    <string name="notification_state_mention">Mentions Only</string>
+    <string name="notification_state_none">None</string>
+    <string name="notification_state_server_default">Server Default</string>
+    <string name="notification_state_default">Default</string>
+    <string name="mute_channel">Mute Channel</string>
+    <string name="mute_server">Mute Server</string>
+    <string name="unmute_channel">Unmute Channel</string>
+    <string name="unmute_server">Unmute Server</string>
+    <string name="mute_for_15_minutes">For 15 minutes</string>
+    <string name="mute_for_1_hour">For 1 hour</string>
+    <string name="mute_for_3_hours">For 3 hours</string>
+    <string name="mute_for_8_hours">For 8 hours</string>
+    <string name="mute_for_24_hours">For 24 hours</string>
+    <string name="mute_until_turned_off">Until I turn it back on</string>
+    <string name="muted_until">Muted until %1$s</string>
     <string name="settings_feedback">Feedback</string>
     <string name="settings_feedback_description">Join the Revolt server to give feedback or suggestions and report bugs.</string>
 
