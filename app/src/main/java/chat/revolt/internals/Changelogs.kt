@@ -65,7 +65,14 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
                         <li><strong>Revolt Forked is now Refork and it now supports notifications!</strong>
                     </ul>
 
-                    <h2>How to Use:</h2>
+                    <h3>Other updates:</h3>
+                    <ol>
+                        <li><strong>Adding support for role, @here, and @everyone mentions, fixing rendering of role, channel names in messages.</strong></li>
+                        <li><strong>Enhanced handling of Revolt URLs, Revolt Urls will now navigate to the given channel or server. role mention support</strong></li>
+                        <li><strong>Everyone/here mention, ( and suppression options on a server/channel basis) </strong></li>
+                    </ol>
+
+                    <h2>How to Use The New Notification System:</h2>
                     <ol>
                         <li><strong>Enable Notification Permissions</strong>: There should have been a pop-up asking you for notification permissions. If not, you'll need to enable permissions for the app.</li>
                         <li><strong>Enable Background Notifications</strong>: Go to Settings → Notifications → Enable "Background Notifications" (an option to enable permissions for the app will be available here)</li>
