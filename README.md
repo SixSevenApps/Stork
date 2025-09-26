@@ -1,11 +1,10 @@
-# Revolt for Android (Forked Version!)
 [![Open in DevPod!](https://devpod.sh/assets/open-in-devpod.svg)](https://devpod.sh/open#https://github.com/alexjyong/android)
 <div align="center">
-    <h1>Revolt for Android (Forked Version!)</h1>
-    <p>Forked Version of the <a href="https://revolt.chat">Revolt</a> Android app.</p>
+    <h1>Refork</h1>
+    <p>Forked and modified version of the <a href="https://revolt.chat">Revolt</a> Android app.</p>
     <br/><br/>
     <div>
-        <img width="192" height="192" alt="image" src="https://github.com/user-attachments/assets/ec2986a6-115d-4f66-8b17-c76cff10ead7" />
+        <img width="537" height="455" alt="image" src="https://github.com/user-attachments/assets/ea3e5f70-295d-4015-b4c5-0b981f68f143" />
         <br/>
     </div>
     <br/><br/><br/>
@@ -14,13 +13,11 @@
 ## Description
 
 NOTE: This is a forked version of the Android app for the [Revolt](https://revolt.chat) chat platform.
-I am not affilated with the Revolt Team, nor is this an official Revolt product.
+**I am not affilated with the Revolt Team, nor is this an official Revolt product.**
 
 I made this for some QOL changes that aren't present in the current version at the time of writing such as notification support, jump to reply, voice messages, and more!
 
-**This app also works on de-googled phones as well!**
-
-Feel free to use this for whatever, but note that this is NOT the official Revolt Android app. :)
+**This app also works on de-Googled phones as well!**
 
 You can download the latest APK [here](https://github.com/alexjyong/android/releases/latest).
 
@@ -36,7 +33,8 @@ Tap a card to expand.
 
 <details>
 <summary><strong>Role Mention (with notifications!)</strong></summary>
-![Role Mention (with notifications!)](https://github.com/user-attachments/assets/bb779690-2ac4-4293-b662-102c92a20923)
+    
+![Role Mention - with notifications](https://github.com/user-attachments/assets/bb779690-2ac4-4293-b662-102c92a20923)
 </details>
 
 <details>
@@ -74,6 +72,8 @@ Tap a card to expand.
 
 ![Server channel list open by default](https://github.com/user-attachments/assets/6a4d7c96-924e-4344-9e19-b90589fa6908)
 </details>
+
+And more!
 
 
 The codebase includes the app itself, as well as an internal library for interacting with the Revolt

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Revolt Forked</string>
+    <string name="app_name" translatable="false">Refork</string>
 
     <string name="back">← Back</string>
     <string name="next">Next →</string>
@@ -10,11 +10,15 @@
     <string name="loading">Fetching some info, hang in there…</string>
     <string name="rate_limit_toast">Hold your horses! You\'re doing that too often in a short amount of time.</string>
 
+    <string name="historical_mode_title">Viewing older messages</string>
+    <string name="historical_mode_description">You\'re viewing historical messages. Newer messages are hidden.</string>
+    <string name="historical_mode_jump_to_present">Jump to present</string>
+
     <string name="terms_of_service">Terms of Service</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="community_guidelines">Community Guidelines</string>
 
-    <string name="login_onboarding_heading">Find your community, connect with the world.</string>
+    <string name="login_onboarding_heading">Refork</string>
     <string name="login_onboarding_body">Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime.</string>
 
     <string name="email">Email</string>
@@ -85,13 +89,13 @@
     <string name="mfa_password_lead">Enter your password to continue.</string>
 
     <string name="about">About</string>
-    <string name="about_full_name">Revolt for Android</string>
-    <string name="about_brought_to_you_by">Brought to you with ❤️ by the Revolt team.</string>
+    <string name="about_full_name">Refork for Android</string>
+    <string name="about_brought_to_you_by">Original code by the Revolt Team. Enhanced by Alex Yong. Logo by Madder</string>
     <string name="about_tab_version">Version</string>
     <string name="about_tab_details">Details</string>
 
     <string name="oss_attribution">OSS Attribution</string>
-    <string name="oss_attribution_body">Revolt is built with the help of these awesome open-source projects.</string>
+    <string name="oss_attribution_body">Refork is built with the help of these awesome open-source projects.</string>
     <string name="oss_attribution_body_2">We\'re grateful to the developers of these projects for making their work available to the world.</string>
     <string name="oss_attribution_warning">The list below is automatically generated. It may be incomplete or inaccurate.</string>
     <string name="oss_attribution_generation_date">Last updated: %1$s</string>
