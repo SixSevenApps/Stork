@@ -26,8 +26,7 @@ For support, discussion, updates and other things, visit our support server on [
 ## Features Added
 Tap a card to expand.
 <details>
-<summary><strong>Notification Support!!!🎉🎉</strong></summary>
-
+<summary><strong>Notification Support!!!🎉🎉 (Note: current method is a bit battery intensive) </strong></summary>
 ![Notification support preview](https://github.com/user-attachments/assets/8123962e-e2d3-4690-87e3-44e09724a29c)
 </details>
 
