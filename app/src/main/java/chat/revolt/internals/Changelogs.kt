@@ -41,6 +41,18 @@ data class Changelog(
 class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
 
     companion object {
+        private val changelog1003007 = ChangelogData(
+            version = ChangelogVersion(
+                code = 1003007,
+                name = "1.3.7bi-forked",
+                title = "Bug Fixes & Improvements"
+            ),
+            date = ChangelogDate(
+                publish = "2025-09-29T12:00:00.000Z"
+            ),
+            summary = "Fixed splash screen logo, notification popup behavior, and attachment upload issues"
+        )
+
         private val changelog1003006 = ChangelogData(
             version = ChangelogVersion(
                 code = 1003006,
@@ -54,11 +66,22 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
         )
 
         private val allChangelogs = listOf(
+            changelog1003007,
             changelog1003006
         )
 
         private fun getChangelogContent(versionCode: Long): String {
             return when (versionCode) {
+                1003007L -> """
+                    <h2>Bug Fixes & Improvements</h2>
+                    <h3>What's Fixed:</h3>
+                    <ul>
+                        <li><strong>Fixed splash screen logo</strong> - The app logo now displays correctly on the splash screen.</li>
+                        <li><strong>Improved notification permission popup</strong> - The notification permission request will now only appear once instead of repeatedly showing up</li>
+                        <li><strong>Fixed feedback link</strong> - The feedback link on the main page now works properly</li>
+                        <li><strong>Prevented duplicate attachment uploads</strong> - Fixed an issue where files could be sent multiple times during the upload process</li>
+                    </ul>
+                """.trimIndent()
                 1003006L -> """
                     <h2>Notification Support!!!!🎉🎉</h2>
                     <ul>
