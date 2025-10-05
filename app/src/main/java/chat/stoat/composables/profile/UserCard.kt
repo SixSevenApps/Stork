@@ -60,11 +60,14 @@ import chat.stoat.api.schemas.User
 import chat.stoat.composables.generic.UserAvatar
 import chat.stoat.ui.theme.FragmentMono
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.GlideException
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import logcat.asLog
+import logcat.logcat
 import java.time.Instant
 import java.util.Date
 
@@ -80,10 +83,14 @@ fun UserCard(
     var palette by remember { mutableStateOf<Palette?>(null) }
     LaunchedEffect(user) {
         val avatarUrl = ResourceLocations.userAvatarUrl(user)
-        val bitmap = withContext(Dispatchers.IO) {
-            Glide.with(context).load(avatarUrl).submit().get().toBitmap()
+        try {
+            val bitmap = withContext(Dispatchers.IO) {
+                Glide.with(context).load(avatarUrl).submit().get().toBitmap()
+            }
+            palette = Palette.from(bitmap).generate()
+        } catch (e: Exception) {
+            logcat { "Failed to extract palette from avatar.\n" + e.asLog() }
         }
-        palette = Palette.from(bitmap).generate()
     }
 
     var qrCode by remember(user) { mutableStateOf<Bitmap?>(null) }
