@@ -78,7 +78,7 @@ android {
 
     defaultConfig {
         applicationId = "chat.revolt"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = Integer.parseInt("001_003_206".replace("_", ""), 10)
         versionName = "1.3.6b"
