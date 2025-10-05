@@ -76,8 +76,8 @@ fun LoginGreetingScreen(navController: NavController) {
                 contentDescription = "Stoat",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .height(55.dp)
-                    .padding(bottom = 10.dp)
+                    .height(100.dp)
+                    .padding(bottom = 15.dp)
                     .combinedClickable(
                         interactionSource = remember(::MutableInteractionSource),
                         indication = null,
