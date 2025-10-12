@@ -1,7 +1,7 @@
 [![Open in DevPod!](https://devpod.sh/assets/open-in-devpod.svg)](https://devpod.sh/open#https://github.com/alexjyong/android)
 <div align="center">
     <h1>Refork</h1>
-    <p>Forked and modified version of the <a href="https://revolt.chat">Revolt</a> Android app.</p>
+    <p>Forked and modified version of the <a href="https://stoat.chat">Stoat</a> Android app.</p>
     <br/><br/>
     <div>
         <img width="537" height="455" alt="image" src="https://github.com/user-attachments/assets/ea3e5f70-295d-4015-b4c5-0b981f68f143" />
@@ -12,8 +12,8 @@
 
 ## Description
 
-NOTE: This is a forked version of the Android app for the [Revolt](https://revolt.chat) chat platform.
-**I am not affilated with the Revolt Team, nor is this an official Revolt product.**
+NOTE: This is a forked version of the Android app for the [Stoat](https://stoat.chat) chat platform.
+**I am not affilated with the Stoat Team, nor is this an official Stoat product.**
 
 I made this for some QOL changes that aren't present in the current version at the time of writing such as notification support, jump to reply, voice messages, and more!
 
@@ -21,7 +21,7 @@ I made this for some QOL changes that aren't present in the current version at t
 
 You can download the latest APK [here](https://github.com/alexjyong/android/releases/latest).
 
-For support, discussion, updates and other things, visit our support server on [Revolt](https://stt.gg/C7qQMwsZ).
+For support, discussion, updates and other things, visit our support server on [Stoat](https://stt.gg/C7qQMwsZ).
 
 ## Features Added
 Tap a card to expand.
