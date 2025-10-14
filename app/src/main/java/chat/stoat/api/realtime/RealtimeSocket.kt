@@ -89,38 +89,50 @@ object RealtimeSocket {
 
         socket?.close(CloseReason(CloseReason.Codes.NORMAL, "Reconnecting to websocket."))
 
-        StoatHttp.ws(STOAT_WEBSOCKET) {
-            socket = this
+        try {
+            StoatHttp.ws(STOAT_WEBSOCKET) {
+                socket = this
 
-            Log.d("RealtimeSocket", "Connected to websocket.")
-            updateDisconnectionState(DisconnectionState.Connected)
-            pushReconnectEvent()
+                Log.d("RealtimeSocket", "Connected to websocket.")
+                updateDisconnectionState(DisconnectionState.Connected)
 
-            // Send authorization frame
-            val authFrame = AuthorizationFrame("Authenticate", token)
-            val authFrameString =
-                StoatJson.encodeToString(AuthorizationFrame.serializer(), authFrame)
+                // Send authorization frame
+                val authFrame = AuthorizationFrame("Authenticate", token)
+                val authFrameString =
+                    StoatJson.encodeToString(AuthorizationFrame.serializer(), authFrame)
 
-            Log.d(
-                "RealtimeSocket",
-                "Sending authorization frame: ${
-                    authFrameString.replace(
-                        token,
-                        "X".repeat(token.length)
-                    )
-                }"
-            )
-            send(StoatJson.encodeToString(AuthorizationFrame.serializer(), authFrame))
+                Log.d(
+                    "RealtimeSocket",
+                    "Sending authorization frame: ${
+                        authFrameString.replace(
+                            token,
+                            "X".repeat(token.length)
+                        )
+                    }"
+                )
+                send(StoatJson.encodeToString(AuthorizationFrame.serializer(), authFrame))
 
-            incoming.consumeEach { frame ->
-                if (frame is Frame.Text) {
-                    val frameString = frame.readText()
-                    val frameType =
-                        StoatJson.decodeFromString(AnyFrame.serializer(), frameString).type
+                incoming.consumeEach { frame ->
+                    if (frame is Frame.Text) {
+                        try {
+                            val frameString = frame.readText()
+                            val frameType =
+                                StoatJson.decodeFromString(AnyFrame.serializer(), frameString).type
 
-                    handleFrame(frameType, frameString)
+                            Log.d("RealtimeSocket", "Handling frame type: $frameType")
+                            handleFrame(frameType, frameString)
+                        } catch (e: Exception) {
+                            Log.e("RealtimeSocket", "Error handling frame type", e)
+                        }
+                    }
                 }
             }
+        } catch (e: Exception) {
+            Log.e("RealtimeSocket", "Websocket error in connect", e)
+        } finally {
+            Log.d("RealtimeSocket", "Websocket connection closed.")
+            updateDisconnectionState(DisconnectionState.Disconnected)
+            socket = null
         }
     }
 
@@ -150,6 +162,7 @@ object RealtimeSocket {
             }
 
             "Ready" -> {
+                Log.d("RealtimeSocket", "Parsing Ready frame...")
                 val readyFrame = StoatJson.decodeFromString(ReadyFrame.serializer(), rawFrame)
 
                 logcat {
@@ -160,13 +173,14 @@ object RealtimeSocket {
                             "and ${readyFrame.voiceStates.size} voice states."
                 }
 
-                Log.d("RealtimeSocket", "Adding users to cache.")
+                Log.d("RealtimeSocket", "Adding ${readyFrame.users.size} users to cache.")
                 val userMap = readyFrame.users.associateBy { it.id!! }
                 StoatAPI.userCache.putAll(userMap)
 
-                Log.d("RealtimeSocket", "Adding servers to cache.")
+                Log.d("RealtimeSocket", "Adding ${readyFrame.servers.size} servers to cache.")
                 val serverMap = readyFrame.servers.associateBy { it.id!! }
                 StoatAPI.serverCache.putAll(serverMap)
+                Log.d("RealtimeSocket", "Server cache now has ${StoatAPI.serverCache.size} servers.")
 
                 // Cache servers in persistent local database
                 readyFrame.servers.map {
@@ -251,6 +265,9 @@ object RealtimeSocket {
                 channelRegistrator.register()
 
                 StoatAPI.closeHydration()
+                
+                Log.d("RealtimeSocket", "Ready frame processed. Pushing reconnect event.")
+                pushReconnectEvent()
             }
 
             "Message" -> {

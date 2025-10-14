@@ -42,6 +42,18 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
 
     companion object {
 
+        private val changelog1003009 = ChangelogData(
+            version = ChangelogVersion(
+                code = 1003009,
+                name = "1.3.8-forked",
+                title = "Connection Fixes & Stoat Updates"
+            ),
+            date = ChangelogDate(
+                publish = "2025-10-14T12:00:00.000Z"
+            ),
+            summary = "Fixed reconnection issues and added in Stoat stuff from upstream."
+        )
+
         private val changelog1003008 = ChangelogData(
             version = ChangelogVersion(
                 code = 1003008,
@@ -79,6 +91,7 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
         )
 
         private val allChangelogs = listOf(
+            changelog1003009,
             changelog1003008,
             changelog1003007,
             changelog1003006
@@ -86,6 +99,17 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
 
         private fun getChangelogContent(versionCode: Long): String {
             return when (versionCode) {
+                1003009L -> """
+                    <h2>Connection Fixes & Stoat Updates</h2>
+                    <h3>What's Fixed:</h3>
+                    <ul>
+                        <li><strong>Fixed reconnection loop</strong> - Resolved an issue where the app would continuously reconnect and disconnect, preventing servers from loading</li>
+                    </ul>
+                    <h3>What's New:</h3>
+                    <ul>
+                        <li><strong>Stoat integration improvements</strong> - Updated code to better support the new Stoat stuff from upstream</li>
+                    </ul>
+                """.trimIndent()
                 1003008L -> """
                     <h2>Updates</h2>
                     <h3>What's New:</h3>

@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class ChannelVoiceState(
     val id: String,
     val participants: List<UserVoiceState>,
-    val node: String,
+    val node: String? = null,
 )
 
 @Serializable
