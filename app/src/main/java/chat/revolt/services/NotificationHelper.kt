@@ -1,4 +1,4 @@
-package chat.revolt.services
+package chat.stoat.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,13 +8,13 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import chat.revolt.R
-import chat.revolt.activities.MainActivity
-import chat.revolt.api.RevoltAPI
-import chat.revolt.api.realtime.frames.receivable.MessageFrame
-import chat.revolt.api.schemas.Channel
-import chat.revolt.api.schemas.Server
-import chat.revolt.api.schemas.User
+import chat.stoat.R
+import chat.stoat.activities.MainActivity
+import chat.stoat.api.StoatAPI
+import chat.stoat.api.realtime.frames.receivable.MessageFrame
+import chat.stoat.api.schemas.Channel
+import chat.stoat.api.schemas.Server
+import chat.stoat.api.schemas.User
 import logcat.LogPriority
 import logcat.logcat
 
@@ -104,7 +104,7 @@ class NotificationHelper(private val context: Context) {
         val userMentionRegex = "<@([0-9A-HJKMNP-TV-Z]{26})>".toRegex()
         processedContent = userMentionRegex.replace(processedContent) { matchResult ->
             val userId = matchResult.groupValues[1]
-            val user = RevoltAPI.userCache[userId]
+            val user = StoatAPI.userCache[userId]
             val displayName = user?.displayName ?: user?.username ?: "Unknown User"
             "@$displayName"
         }
@@ -113,7 +113,7 @@ class NotificationHelper(private val context: Context) {
             val roleMentionRegex = "<%([0-9A-HJKMNP-TV-Z]{26})>".toRegex()
             processedContent = roleMentionRegex.replace(processedContent) { matchResult ->
                 val roleId = matchResult.groupValues[1]
-                val server = RevoltAPI.serverCache[serverId]
+                val server = StoatAPI.serverCache[serverId]
                 val role = server?.roles?.get(roleId)
                 val roleName = role?.name ?: "Unknown Role"
                 "@$roleName"
@@ -123,7 +123,7 @@ class NotificationHelper(private val context: Context) {
         val channelMentionRegex = "<#([0-9A-HJKMNP-TV-Z]{26})>".toRegex()
         processedContent = channelMentionRegex.replace(processedContent) { matchResult ->
             val channelId = matchResult.groupValues[1]
-            val channel = RevoltAPI.channelCache[channelId]
+            val channel = StoatAPI.channelCache[channelId]
             val channelName = channel?.name ?: "Unknown Channel"
             "#$channelName"
         }

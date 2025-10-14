@@ -1,0 +1,91 @@
+package chat.stoat.api.schemas
+
+import chat.stoat.ui.theme.OverridableColourScheme
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+
+@Serializable
+data class OrderingSettings(
+    val servers: List<String> = emptyList()
+)
+
+enum class NotificationState(val value: String) {
+    ALL("all"),
+    MENTION("mention"),
+    NONE("none");
+
+    companion object {
+        fun fromString(value: String?): NotificationState? {
+            return entries.find { it.value == value }
+        }
+    }
+}
+
+@Serializable
+data class MuteState(
+    val until: Long? = null
+)
+
+@Serializable
+data class NotificationSettings(
+    val channel: Map<String, String> = emptyMap(),
+    val server: Map<String, String> = emptyMap(),
+    val channel_mutes: Map<String, MuteState> = emptyMap(),
+    val server_mutes: Map<String, MuteState> = emptyMap()
+)
+
+@Serializable
+data class _NotificationSettingsToParse(
+    val channel: Map<String, JsonElement?> = emptyMap(),
+    val server: Map<String, JsonElement?> = emptyMap(),
+    val channel_mutes: Map<String, JsonElement?> = emptyMap(),
+    val server_mutes: Map<String, JsonElement?> = emptyMap()
+)
+
+@Serializable
+data class AndroidSpecificSettingsSpecialEmbedSettings(
+    /**
+     * Whether to embed YouTube videos interactively.
+     * Boolean.
+     */
+    val embedYouTube: Boolean = true,
+    /**
+     * Whether to embed Apple Music albums and tracks interactively.
+     * Boolean.
+     */
+    val embedAppleMusic: Boolean = false
+)
+
+@Serializable
+data class AndroidSpecificSettings(
+    /**
+     * The theme to use for the app.
+     * Can be one of `{ None, Default, Light, M3Dynamic, Amoled }`
+     */
+    var theme: String? = null,
+    /**
+     * Colour overrides.
+     * Map of `primary, onPrimary, primaryContainer, onPrimaryContainer, inversePrimary, secondary, onSecondary, secondaryContainer, onSecondaryContainer, tertiary, onTertiary, tertiaryContainer, onTertiaryContainer, background, onBackground, surface, onSurface, surfaceVariant, onSurfaceVariant, surfaceTint, inverseSurface, inverseOnSurface, error, onError, errorContainer, onErrorContainer, outline, outlineVariant, scrim` to int colours.
+     */
+    var colourOverrides: OverridableColourScheme? = null,
+    /**
+     * Message reply style.
+     * Can be one of `{ None, SwipeFromEnd, DoubleTap }`
+     */
+    var messageReplyStyle: String? = null,
+    /**
+     * Server selection behavior.
+     * Can be one of `{ LastChannel, ShowChannelList }`
+     */
+    var serverSelectionBehavior: String? = null,
+    /**
+     * Avatar radius.
+     * Must be integer in range 0..50 inclusive.
+     */
+    var avatarRadius: Int? = null,
+    /**
+     * Controls preferences for special embeds.
+     * Object; See [AndroidSpecificSettingsSpecialEmbedSettings] for format.
+     */
+    var specialEmbedSettings: AndroidSpecificSettingsSpecialEmbedSettings? = null
+)

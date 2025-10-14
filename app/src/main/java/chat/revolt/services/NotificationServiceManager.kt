@@ -1,11 +1,11 @@
-package chat.revolt.services
+package chat.stoat.services
 
 import android.content.Context
 import android.content.pm.PackageManager
 import android.Manifest
 import android.os.Build
 import androidx.core.content.ContextCompat
-import chat.revolt.persistence.KVStorage
+import chat.stoat.persistence.KVStorage
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

@@ -23,5 +23,5 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "Revolt"
+rootProject.name = "Stoat"
 include(":app")
