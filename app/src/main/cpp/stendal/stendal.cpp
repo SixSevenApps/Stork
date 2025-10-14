@@ -42,7 +42,7 @@ namespace Stendal {
         constructArrayListMethod = env->GetMethodID(localArrayListClass, "<init>", "(I)V");
         addArrayListMethod = env->GetMethodID(localArrayListClass, "add", "(Ljava/lang/Object;)Z");
 
-        jclass localAstNodeClass = env->FindClass("chat/revolt/ndk/AstNode");
+        jclass localAstNodeClass = env->FindClass("chat/stoat/ndk/AstNode");
         astNodeClass = (jclass) env->NewGlobalRef(localAstNodeClass);
         astNodeConstructor = env->GetMethodID(localAstNodeClass, "<init>",
                                               STENDAL_ASTNODE_CONSTRUCTOR_SIGNATURE);
@@ -151,12 +151,12 @@ namespace Stendal {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_chat_revolt_ndk_Stendal_init(JNIEnv *env, [[maybe_unused]] jobject thiz) {
+Java_chat_stoat_ndk_Stendal_init(JNIEnv *env, [[maybe_unused]] jobject thiz) {
     Stendal::init(env);
 }
 
 extern "C" JNIEXPORT jobject JNICALL
-Java_chat_revolt_ndk_Stendal_render(JNIEnv *env, [[maybe_unused]] jobject thiz, jstring input) {
+Java_chat_stoat_ndk_Stendal_render(JNIEnv *env, [[maybe_unused]] jobject thiz, jstring input) {
     const char *inputStr = env->GetStringUTFChars(input, nullptr);
     
     std::string preprocessed = Stendal::preprocess_markdown(std::string(inputStr));

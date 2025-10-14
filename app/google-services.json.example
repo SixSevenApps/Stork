@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "123456789012",
-    "project_id": "revolt-android-dev",
-    "storage_bucket": "revolt-chat.appspot.com"
+    "project_id": "stoat-android-dev",
+    "storage_bucket": "stoat-chat.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:123456789012:android:abcdef1234567890",
         "android_client_info": {
-          "package_name": "chat.revolt.forked"
+          "package_name": "chat.stoat.forked"
         }
       },
       "oauth_client": [
@@ -38,7 +38,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:123456789012:android:abcdef1234567891",
         "android_client_info": {
-          "package_name": "chat.revolt.forked.debug"
+          "package_name": "chat.stoat.forked.debug"
         }
       },
       "oauth_client": [

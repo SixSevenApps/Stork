@@ -75,7 +75,7 @@ Tap a card to expand.
 And more!
 
 
-The codebase includes the app itself, as well as an internal library for interacting with the Revolt
+The codebase includes the app itself, as well as an internal library for interacting with the Stoat
 API. The app is written in Kotlin, and wholly
 uses [Jetpack Compose](https://developer.android.com/jetpack/compose).
 
@@ -107,7 +107,7 @@ After the instance fires up run
 ``` 
 To generate a debug version of the application. 
 
-If you wanted a signed copy that isn't in debug mode, set up a release-key.keystore file, update revoltbuild.properties to have your passwords and run:
+If you wanted a signed copy that isn't in debug mode, set up a release-key.keystore file, update stoatbuild.properties to have your passwords and run:
 
 ```sh
 ./gradlew assembleRelease -x app:uploadSentryProguardMappingsRelease
@@ -152,7 +152,7 @@ After the instance fires up run
 ``` 
 To generate a debug version of the application. 
 
-If you wanted a signed copy that isn't in debug mode, set up a release-key.keystore file, update revoltbuild.properties to have your passwords and run:
+If you wanted a signed copy that isn't in debug mode, set up a release-key.keystore file, update stoatbuild.properties to have your passwords and run:
 
 ```sh
 ./gradlew assembleRelease -x app:uploadSentryProguardMappingsRelease
@@ -184,5 +184,5 @@ Or install [Termux](https://termux.dev/en/), then install `wormhole-rs` on Termu
 Open the project in Android Studio. You can then run the app on an emulator or a physical device by
 running the `app` module.
 
-In-depth setup instructions are pretty much the same as the stock Revolt app and can be found
+In-depth setup instructions are pretty much the same as the stock Stoat app and can be found
 at [Setting up your Development Environment](https://revoltchat.github.io/android/contributing/setup/)

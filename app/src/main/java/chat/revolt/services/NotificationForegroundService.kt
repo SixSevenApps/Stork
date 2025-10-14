@@ -1,4 +1,4 @@
-package chat.revolt.services
+package chat.stoat.services
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -10,18 +10,18 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import chat.revolt.R
-import chat.revolt.activities.MainActivity
-import chat.revolt.api.REVOLT_WEBSOCKET
-import chat.revolt.api.RevoltAPI
-import chat.revolt.api.RevoltHttp
-import chat.revolt.api.RevoltJson
-import chat.revolt.api.realtime.frames.receivable.AnyFrame
-import chat.revolt.api.realtime.frames.receivable.MessageFrame
-import chat.revolt.api.realtime.frames.sendable.AuthorizationFrame
-import chat.revolt.api.schemas.NotificationState
-import chat.revolt.api.settings.NotificationSettingsProvider
-import chat.revolt.api.internals.CurrentChannelState
+import chat.stoat.R
+import chat.stoat.activities.MainActivity
+import chat.stoat.api.STOAT_WEBSOCKET
+import chat.stoat.api.StoatAPI
+import chat.stoat.api.StoatHttp
+import chat.stoat.api.StoatJson
+import chat.stoat.api.realtime.frames.receivable.AnyFrame
+import chat.stoat.api.realtime.frames.receivable.MessageFrame
+import chat.stoat.api.realtime.frames.sendable.AuthorizationFrame
+import chat.stoat.api.schemas.NotificationState
+import chat.stoat.api.settings.NotificationSettingsProvider
+import chat.stoat.api.internals.CurrentChannelState
 import io.ktor.client.plugins.websocket.ws
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
@@ -65,7 +65,7 @@ class NotificationForegroundService : Service() {
 
     private fun shouldNotifyMessage(channelId: String, serverId: String?, isMention: Boolean): Boolean {
         return try {
-            val channel = RevoltAPI.channelCache[channelId]
+            val channel = StoatAPI.channelCache[channelId]
 
             when {
                 channel == null -> false
@@ -121,12 +121,12 @@ class NotificationForegroundService : Service() {
                 try {
                     logcat(LogPriority.INFO) { "Connecting to WebSocket..." }
 
-                    RevoltHttp.ws(REVOLT_WEBSOCKET) {
+                    StoatHttp.ws(STOAT_WEBSOCKET) {
                         logcat(LogPriority.INFO) { "WebSocket connected successfully" }
                         retryCount = 0
 
-                        val authFrame = AuthorizationFrame("Authenticate", RevoltAPI.sessionToken)
-                        send(RevoltJson.encodeToString(AuthorizationFrame.serializer(), authFrame))
+                        val authFrame = AuthorizationFrame("Authenticate", StoatAPI.sessionToken)
+                        send(StoatJson.encodeToString(AuthorizationFrame.serializer(), authFrame))
                         logcat(LogPriority.DEBUG) { "Sent authentication frame" }
 
                         incoming.consumeEach { frame ->
@@ -149,11 +149,11 @@ class NotificationForegroundService : Service() {
 
     private suspend fun handleWebSocketFrame(frameString: String) {
         try {
-            val frameType = RevoltJson.decodeFromString(AnyFrame.serializer(), frameString).type
+            val frameType = StoatJson.decodeFromString(AnyFrame.serializer(), frameString).type
 
             when (frameType) {
                 "Message" -> {
-                    val messageFrame = RevoltJson.decodeFromString(MessageFrame.serializer(), frameString)
+                    val messageFrame = StoatJson.decodeFromString(MessageFrame.serializer(), frameString)
                     handleNewMessage(messageFrame)
                 }
                 "Ready" -> {
@@ -171,14 +171,14 @@ class NotificationForegroundService : Service() {
     private suspend fun handleNewMessage(messageFrame: MessageFrame) {
         try {
             val channelId = messageFrame.channel ?: return
-            val channel = RevoltAPI.channelCache[channelId]
+            val channel = StoatAPI.channelCache[channelId]
             val serverId = channel?.server
 
-            if (messageFrame.author == RevoltAPI.selfId) {
+            if (messageFrame.author == StoatAPI.selfId) {
                 return
             }
 
-            val selfId = RevoltAPI.selfId ?: return
+            val selfId = StoatAPI.selfId ?: return
             
             val suppressEveryoneMentions = NotificationSettingsProvider.shouldSuppressEveryoneMentions(channelId, serverId)
             val containsEveryone = messageFrame.content?.contains("@everyone") == true
@@ -195,9 +195,9 @@ class NotificationForegroundService : Service() {
                 
                 var hasRoleMention = false
                 if (serverId != null && messageFrame.content != null) {
-                    val mentionedRoleIds = chat.revolt.internals.text.MessageProcessor.findMentionedRoleIDs(messageFrame.content)
+                    val mentionedRoleIds = chat.stoat.internals.text.MessageProcessor.findMentionedRoleIDs(messageFrame.content)
                     if (mentionedRoleIds.isNotEmpty()) {
-                        val member = RevoltAPI.members.getMember(serverId, selfId)
+                        val member = StoatAPI.members.getMember(serverId, selfId)
                         val userRoles = member?.roles ?: emptyList()
                         hasRoleMention = mentionedRoleIds.any { roleId -> userRoles.contains(roleId) }
                     }
@@ -206,8 +206,8 @@ class NotificationForegroundService : Service() {
                 val isMention = hasDirectMention || hasMassMention || hasRoleMention
 
                 if (shouldNotifyMessage(channelId, serverId, isMention)) {
-                    val author = RevoltAPI.userCache[messageFrame.author]
-                    val server = serverId?.let { RevoltAPI.serverCache[it] }
+                    val author = StoatAPI.userCache[messageFrame.author]
+                    val server = serverId?.let { StoatAPI.serverCache[it] }
 
                     notificationHelper.showMessageNotification(
                         messageFrame = messageFrame,
@@ -230,10 +230,10 @@ class NotificationForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
-                "Revolt Notification Service",
+                "Refork Notification Service",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Keeps Revolt connected for instant notifications"
+                description = "Keeps Refork connected for instant notifications"
                 setShowBadge(false)
             }
 

@@ -109,4 +109,4 @@
     public <fields>;
 }
 
--keep class chat.revolt.ndk.** { *; }
+-keep class chat.stoat.ndk.AstNode { *; }
