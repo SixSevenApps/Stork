@@ -1,3 +1,6 @@
+# PRs welcome
+I currently have other projects and life expectations going on, and my use case for Revolt/Stoat ended up not working on. But I know folks use this app, so currently looking for folks to help out with issues as they crop up.
+
 [![Open in DevPod!](https://devpod.sh/assets/open-in-devpod.svg)](https://devpod.sh/open#https://github.com/alexjyong/android)
 <div align="center">
     <h1>Refork</h1>
