@@ -54,7 +54,7 @@ class UpdateChecker(
     private suspend fun fetchLatestRelease(): GitHubRelease? {
         return try {
             withContext(Dispatchers.IO) {
-                val response = httpClient.get("https://api.github.com/repos/alexjyong/android/releases/latest")
+                val response = httpClient.get("https://api.github.com/repos/SixSevenApps/Stork/releases/latest")
                 response.body<GitHubRelease>()
             }
         } catch (e: Exception) {
