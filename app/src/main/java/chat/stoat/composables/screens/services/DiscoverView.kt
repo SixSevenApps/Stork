@@ -2,7 +2,6 @@ package chat.stoat.composables.screens.services
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.core.net.toUri
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -26,6 +25,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import chat.stoat.activities.InviteActivity
 import chat.stoat.api.STOAT_INVITES
 import chat.stoat.api.STOAT_WEB_APP
+import chat.stoat.api.STOAT_LEGACY_APP
 import chat.stoat.api.StoatJson
 import chat.stoat.api.buildUserAgent
 import chat.stoat.api.internals.ThemeCompat
