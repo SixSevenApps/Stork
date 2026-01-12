@@ -3,6 +3,7 @@ package chat.stoat.composables.screens.services
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.core.net.toUri
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.animation.core.animateFloatAsState
@@ -102,7 +103,8 @@ fun ColumnScope.DiscoverView() {
                             view: WebView?,
                             request: WebResourceRequest?
                         ): Boolean {
-                            if (request?.url?.host.equals(Uri.parse(STOAT_WEB_APP).host)) {
+                            if (request?.url?.host.equals(STOAT_WEB_APP.toUri().host) ||
+                                request?.url?.host.equals(STOAT_LEGACY_APP.toUri().host)) {
                                 val intent = Intent(
                                     context,
                                     InviteActivity::class.java
@@ -114,7 +116,7 @@ fun ColumnScope.DiscoverView() {
                                 return true
                             }
 
-                            if (!request?.url?.host.equals("stt.gg")) {
+                            if (!request?.url?.host.equals(STOAT_INVITES)) {
                                 return true
                             }
 
