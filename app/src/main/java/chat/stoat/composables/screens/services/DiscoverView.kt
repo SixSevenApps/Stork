@@ -25,6 +25,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import chat.stoat.activities.InviteActivity
 import chat.stoat.api.STOAT_INVITES
 import chat.stoat.api.STOAT_WEB_APP
+import chat.stoat.api.STOAT_LEGACY_APP
 import chat.stoat.api.StoatJson
 import chat.stoat.api.buildUserAgent
 import chat.stoat.api.internals.ThemeCompat
@@ -102,7 +103,8 @@ fun ColumnScope.DiscoverView() {
                             view: WebView?,
                             request: WebResourceRequest?
                         ): Boolean {
-                            if (request?.url?.host.equals(Uri.parse(STOAT_WEB_APP).host)) {
+                            if (request?.url?.host.equals(Uri.parse(STOAT_WEB_APP).host) ||
+                                request?.url?.host.equals(Uri.parse(STOAT_LEGACY_APP).host)) {
                                 val intent = Intent(
                                     context,
                                     InviteActivity::class.java
@@ -114,7 +116,7 @@ fun ColumnScope.DiscoverView() {
                                 return true
                             }
 
-                            if (!request?.url?.host.equals("stt.gg")) {
+                            if (!request?.url?.host.equals(STOAT_INVITES)) {
                                 return true
                             }
 

@@ -65,6 +65,7 @@ val STOAT_FILES =
 val STOAT_PROXY =
     if (USE_ALPHA_API) "https://alpha.revolt.chat/january" else "https://proxy.stoatusercontent.com"
 const val STOAT_WEB_APP = "https://stoat.chat"
+const val STOAT_LEGACY_APP = "https://app.revolt.chat"
 const val STOAT_INVITES = "https://stt.gg"
 val STOAT_WEBSOCKET =
     if (USE_ALPHA_API) "wss://alpha.revolt.chat/ws" else "wss://events.stoat.chat"
