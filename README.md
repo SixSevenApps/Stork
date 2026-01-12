@@ -5,7 +5,7 @@
     <p>Forked and modified version of the <a href="https://stoat.chat">Stoat</a> Android app.</p>
     <br/><br/>
     <div>
-        <img width="537" height="455" alt="image" src="https://github.com/user-attachments/assets/ea3e5f70-295d-4015-b4c5-0b981f68f143" />
+        <img width="537" height="537" alt="Stork" src="https://github.com/user-attachments/assets/2aa7c461-f6e8-4c3e-bc4e-3334e73511e0" />
         <br/>
     </div>
     <br/><br/><br/>
