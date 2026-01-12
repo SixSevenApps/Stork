@@ -42,112 +42,33 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
 
     companion object {
 
-        private val changelog1003009 = ChangelogData(
+        private val changelog1003001 = ChangelogData(
             version = ChangelogVersion(
-                code = 1003009,
-                name = "1.3.8-forked",
-                title = "Connection Fixes & Stoat Updates"
+                code = 1003001,
+                name = "2.0.0",
+                title = "First release of Stork"
             ),
             date = ChangelogDate(
-                publish = "2025-10-14T12:00:00.000Z"
+                publish = "2026-01-12T13:00:00.000Z"
             ),
-            summary = "Fixed reconnection issues and added in Stoat stuff from upstream."
-        )
-
-        private val changelog1003008 = ChangelogData(
-            version = ChangelogVersion(
-                code = 1003008,
-                name = "1.3.7bj-forked",
-                title = "Updates!"
-            ),
-            date = ChangelogDate(
-                publish = "2025-10-01T12:00:00.000Z"
-            ),
-            summary = "Better invite code generation, and first pass at Stoat adjustments"
-        )
-
-        private val changelog1003007 = ChangelogData(
-            version = ChangelogVersion(
-                code = 1003007,
-                name = "1.3.7bi-forked",
-                title = "Bug Fixes & Improvements"
-            ),
-            date = ChangelogDate(
-                publish = "2025-09-29T12:00:00.000Z"
-            ),
-            summary = "Fixed splash screen logo, notification popup behavior, and attachment upload issues"
-        )
-
-        private val changelog1003006 = ChangelogData(
-            version = ChangelogVersion(
-                code = 1003006,
-                name = "1.3.6bh-forked",
-                title = "Notification Support!!!!🎉🎉"
-            ),
-            date = ChangelogDate(
-                publish = "2025-09-26T12:00:00.000Z"
-            ),
-            summary = "Comprehensive notification system"
+            summary = "Initial release of Stork. Credit to Refork by Alex Yong"
         )
 
         private val allChangelogs = listOf(
-            changelog1003009,
-            changelog1003008,
-            changelog1003007,
-            changelog1003006
+            changelog1003001
         )
 
         private fun getChangelogContent(versionCode: Long): String {
             return when (versionCode) {
-                1003009L -> """
-                    <h2>Connection Fixes & Stoat Updates</h2>
-                    <h3>What's Fixed:</h3>
-                    <ul>
-                        <li><strong>Fixed reconnection loop</strong> - Resolved an issue where the app would continuously reconnect and disconnect, preventing servers from loading</li>
-                    </ul>
-                    <h3>What's New:</h3>
-                    <ul>
-                        <li><strong>Stoat integration improvements</strong> - Updated code to better support the new Stoat stuff from upstream</li>
-                    </ul>
-                """.trimIndent()
-                1003008L -> """
-                    <h2>Updates</h2>
-                    <h3>What's New:</h3>
-                    <ul>
-                        <li><strong>First pass at Stoat link updates</strong></li>
-                        <li><strong>Users can now generate invite links from the Server and Channel Context menus. (Long press a server or channel to see!)</strong></li>
-                    </ul>
-                """.trimIndent()
-                1003007L -> """
-                    <h2>Bug Fixes & Improvements</h2>
-                    <h3>What's Fixed:</h3>
-                    <ul>
-                        <li><strong>Fixed splash screen logo</strong> - The app logo now displays correctly on the splash screen.</li>
-                        <li><strong>Improved notification permission popup</strong> - The notification permission request will now only appear once instead of repeatedly showing up</li>
-                        <li><strong>Fixed feedback link</strong> - The feedback link on the main page now works properly</li>
-                        <li><strong>Prevented duplicate attachment uploads</strong> - Fixed an issue where files could be sent multiple times during the upload process</li>
-                    </ul>
-                """.trimIndent()
                 1003006L -> """
-                    <h2>Notification Support!!!!🎉🎉</h2>
+                    <h2>First release of Stork</h2>
                     <ul>
-                        <li><strong>Revolt Forked is now Refork and it now supports notifications!</strong>
+                        <li><strong>Stork is based on Refork by Alex Yong</strong>
                     </ul>
 
                     <h3>Other updates:</h3>
                     <ol>
-                        <li><strong>Adding support for role, @here, and @everyone mentions, fixing rendering of role, channel names in messages.</strong></li>
-                        <li><strong>Enhanced handling of Revolt URLs, Revolt Urls will now navigate to the given channel or server. role mention support</strong></li>
-                        <li><strong>Everyone/here mention, ( and suppression options on a server/channel basis) </strong></li>
-                    </ol>
-
-                    <h2>How to Use The New Notification System:</h2>
-                    <ol>
-                        <li><strong>Enable Notification Permissions</strong>: There should have been a pop-up asking you for notification permissions. If not, you'll need to enable permissions for the app.</li>
-                        <li><strong>Enable Background Notifications</strong>: Go to Settings → Notifications → Enable "Background Notifications" (an option to enable permissions for the app will be available here)</li>
-                        <li><strong>(Optional, but recommended for reliable notifications) Optimize Battery Settings</strong>: Toggle "Battery Optimization" in notification settings and follow the system prompts to ensure reliable delivery</li>
-                        <li><strong>Click Notifications</strong>: Simply tap any notification to jump directly to the message that triggered it</li>
-                        <li><strong>Known issues</strong>: If the app is completely closed (not just minimized), navigation away from the channel/DM where the notification is will be disabled. Also, sometimes the name of the user will not show up.</li>
+                        <li><strong>Fixed the Certificate issues, images now load.</strong></li>
                     </ol>
                 """.trimIndent()
                 else -> "<p>Changelog content not available</p>"

@@ -72,7 +72,7 @@ fun LoginGreetingScreen(navController: NavController) {
         ) {
             Image(
                 painter = painterResource(id = R.mipmap.ic_launcher),
-                contentDescription = "Refork Logo",
+                contentDescription = "Stork Logo",
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .height(100.dp)

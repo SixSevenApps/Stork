@@ -230,10 +230,10 @@ class NotificationForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
-                "Refork Notification Service",
+                "Stork Notification Service",
                 NotificationManager.IMPORTANCE_LOW
             ).apply {
-                description = "Keeps Refork connected for instant notifications"
+                description = "Keeps Stork connected for instant notifications"
                 setShowBadge(false)
             }
 
@@ -250,7 +250,7 @@ class NotificationForegroundService : Service() {
         )
 
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Revolt Notifications")
+            .setContentTitle("Stoat Notifications")
             .setContentText("Connected and listening for messages")
             .setSmallIcon(R.drawable.ic_notification_monochrome)
             .setContentIntent(pendingIntent)

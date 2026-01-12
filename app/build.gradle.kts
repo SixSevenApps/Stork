@@ -77,11 +77,11 @@ android {
     namespace = "chat.stoat"
 
     defaultConfig {
-        applicationId = "chat.stoat.forked"
+        applicationId = "chat.stoat.stork"
         minSdk = 26
         targetSdk = 36
         versionCode = Integer.parseInt("001_003_208".replace("_", ""), 10)
-        versionName = "1.3.8-forked"
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
