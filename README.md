@@ -1,9 +1,7 @@
-# PRs welcome
-I currently have other projects and life expectations going on, and my use case for Revolt/Stoat ended up not working on. But I know folks use this app, so currently looking for folks to help out with issues as they crop up.
 
-[![Open in DevPod!](https://devpod.sh/assets/open-in-devpod.svg)](https://devpod.sh/open#https://github.com/alexjyong/android)
+[![Open in DevPod!](https://devpod.sh/assets/open-in-devpod.svg)](https://devpod.sh/open#https://github.com/etncc/Stork)
 <div align="center">
-    <h1>Refork</h1>
+    <h1>Stork</h1>
     <p>Forked and modified version of the <a href="https://stoat.chat">Stoat</a> Android app.</p>
     <br/><br/>
     <div>
@@ -15,21 +13,18 @@ I currently have other projects and life expectations going on, and my use case 
 
 ## Description
 
-NOTE: This is a forked version of the Android app for the [Stoat](https://stoat.chat) chat platform.
+NOTE: This is a forked version of refork which is a fork of the Android app for the [Stoat](https://stoat.chat) chat platform.
+Refork [here](https://github.com/alexjyong/android)
 **I am not affilated with the Stoat Team, nor is this an official Stoat product.**
-
-I made this for some QOL changes that aren't present in the current version at the time of writing such as notification support, jump to reply, voice messages, and more!
 
 **This app also works on de-Googled phones as well!**
 
-You can download the latest APK [here](https://github.com/alexjyong/android/releases/latest).
-
-For support, discussion, updates and other things, visit our support server on [Stoat](https://stt.gg/C7qQMwsZ).
+You can download the latest APK [here](https://github.com/etncc/Stork/releases/latest).
 
 ## Features Added
 Tap a card to expand.
 <details>
-<summary><strong>Notification Support!!!🎉🎉 (Note: current method is a bit battery intensive) </strong></summary>
+<summary><strong>Notification Support!!!🎉🎉 (Note: current method is a very battery intensive) </strong></summary>
 ![Notification support preview](https://github.com/user-attachments/assets/8123962e-e2d3-4690-87e3-44e09724a29c)
 </details>
 
