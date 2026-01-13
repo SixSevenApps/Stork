@@ -42,6 +42,18 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
 
     companion object {
 
+        private val changelog1003002 = ChangelogData(
+            version = ChangelogVersion(
+                code = 1003002,
+                name = "2.0.1",
+                title = "Bug Fixes"
+            ),
+            date = ChangelogDate(
+                publish = "2026-01-12T21:00:00.000Z"
+            ),
+            summary = "Fixed being unable to join servers through Discover"
+        )
+        
         private val changelog1003001 = ChangelogData(
             version = ChangelogVersion(
                 code = 1003001,
@@ -55,6 +67,7 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
         )
 
         private val allChangelogs = listOf(
+            changelog1003002
             changelog1003001
         )
 
