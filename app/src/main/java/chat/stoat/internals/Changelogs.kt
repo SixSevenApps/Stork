@@ -67,7 +67,7 @@ class Changelogs(val context: Context, val kvStorage: KVStorage? = null) {
         )
 
         private val allChangelogs = listOf(
-            changelog1003002
+            changelog1003002,
             changelog1003001
         )
 
